@@ -3,6 +3,7 @@ let { rmSync } = require('fs')
 let { rm } = require('fs/promises')
 let { spawn } = require('child_process')
 let minimist = require('minimist')
+let isWin = process.platform.startsWith('win')
 
 async function compileProject ({ inventory }) {
   let { inv } = inventory
@@ -38,7 +39,7 @@ async function compileHandler (params) {
   stage = stage || 'testing'
   let arch = lambda.config.architecture === 'arm64' ? 'arm64' : 'amd64'
 
-  let bootstrap = join(build, 'bootstrap')
+  let bootstrap = join(build, `bootstrap${isWin ? '.exe' : ''}`)
   let command = `go get && go build -o ${bootstrap} main.go`
   if (arc.go) {
     let settings = Object.fromEntries(arc.go)
